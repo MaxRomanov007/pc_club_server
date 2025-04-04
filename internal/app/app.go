@@ -8,6 +8,7 @@ import (
 	"pc_club_server/internal/config"
 	pcClubServer "pc_club_server/internal/http-server/handlers"
 	"pc_club_server/internal/services/auth"
+	"pc_club_server/internal/services/order"
 	"pc_club_server/internal/services/user"
 	gorm "pc_club_server/internal/storage/mssql"
 	"pc_club_server/internal/storage/redis"
@@ -47,8 +48,9 @@ func New(
 		return nil, fmt.Errorf("%s: failed to create redis storage: %w", op, err)
 	}
 
-	authService := auth.New(cfg.Auth, redisStorage, redisStorage, mssqlStorage, mssqlStorage)
-	userService := user.New(mssqlStorage, mssqlStorage)
+	authService := auth.NewService(cfg.Auth, redisStorage, redisStorage, mssqlStorage, mssqlStorage)
+	userService := user.NewService(mssqlStorage, mssqlStorage)
+	orderService := order.NewService(cfg.Orders, mssqlStorage, mssqlStorage)
 
 	pcClubApi := pcClubServer.New(
 		log,
@@ -57,6 +59,7 @@ func New(
 		authService,
 		mssqlStorage,
 		mssqlStorage,
+		orderService,
 	)
 
 	pcClubApplication := pcClub.New(cfg.HttpsServer, pcClubApi)

@@ -48,7 +48,7 @@ func (a *API) PcTypes() http.HandlerFunc {
 
 func (a *API) PcType() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		const op = "handlers.pcClub.pcType.PcType"
+		const op = "handlers.PcType"
 
 		log := a.Log.With(
 			slog.String("operation", op),

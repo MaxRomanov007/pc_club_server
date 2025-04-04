@@ -50,7 +50,7 @@ const (
 	AccessRedisBlackListName  = "access_black_list_exp"
 )
 
-func New(
+func NewService(
 	cfg *config.AuthConfig,
 	redisOwner redisOwner,
 	redisProvider redisProvider,

@@ -40,7 +40,7 @@ type UserResponse struct {
 
 func (a *API) Register() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		const op = "handlers.user.SaveUser"
+		const op = "handlers.SaveUser"
 
 		log := a.Log.With(
 			slog.String("operation", op),
@@ -88,7 +88,7 @@ func (a *API) Register() http.HandlerFunc {
 
 func (a *API) Login() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		const op = "handlers.user.SaveUser"
+		const op = "handlers.SaveUser"
 
 		log := a.Log.With(
 			slog.String("operation", op),
@@ -136,7 +136,7 @@ func (a *API) Login() http.HandlerFunc {
 
 func (a *API) Refresh() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		const op = "handlers.user.Refresh"
+		const op = "handlers.Refresh"
 
 		log := a.Log.With(
 			slog.String("operation", op),
@@ -171,7 +171,7 @@ func (a *API) Refresh() http.HandlerFunc {
 
 func (a *API) User() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		const op = "handlers.user.Refresh"
+		const op = "handlers.Refresh"
 
 		log := a.Log.With(
 			slog.String("operation", op),
@@ -201,7 +201,7 @@ func (a *API) User() http.HandlerFunc {
 
 func (a *API) Logout() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		const op = "handlers.user.Logout"
+		const op = "handlers.Logout"
 
 		log := a.Log.With(
 			slog.String("operation", op),

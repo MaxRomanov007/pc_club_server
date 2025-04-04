@@ -10,35 +10,34 @@ import (
 	"pc_club_server/internal/lib/api/response"
 )
 
-type PcRoomRequest struct {
-	RoomId int64 `get:"room-id,true" validate:"required,numeric,min=1"`
+type OrderPcRequest struct {
+	PcId      int64 `json:"pc_id" validate:"required,number,min=0"`
+	HourCount int16 `json:"hour_count" validate:"required,number,min=0"`
 }
 
-type PcRoomsRequest struct {
-	PcTypeID int64 `get:"type_id" validate:"required,numeric,min=1"`
-}
-
-func (a *API) PcRooms() http.HandlerFunc {
+func (a *API) OrderPc() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		const op = "handlers.PcRooms"
+		const op = "handlers.OrderPc"
 
 		log := a.Log.With(
 			slog.String("operation", op),
 			slog.String("request_id", middleware.GetReqID(r.Context())),
 		)
 
-		req, ok := request.DecodeAndValidateGetRequest[PcRoomsRequest](w, r, log)
+		uid := request.MustUID(r)
+
+		req, ok := request.DecodeAndValidateRequest[OrderPcRequest](w, r, log)
 		if !ok {
 			return
 		}
 
-		pcRooms, err := a.PcRoomService.PcRooms(r.Context(), req.PcTypeID)
+		code, err := a.PcOrderService.OrderPc(r.Context(), uid, req.PcId, req.HourCount)
 		if err != nil {
-			log.Error("failed to get pc room", sl.Err(err))
+			log.Warn("failed to create order", sl.Err(err))
 			response.Internal(w)
 			return
 		}
 
-		render.JSON(w, r, pcRooms)
+		render.JSON(w, r, code)
 	}
 }

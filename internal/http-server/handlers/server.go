@@ -92,13 +92,23 @@ type PcTypeService interface {
 	) (pc models.PcType, err error)
 }
 
+type PcOrderService interface {
+	OrderPc(
+		ctx context.Context,
+		uid int64,
+		pcId int64,
+		HourCount int16,
+	) (code string, err error)
+}
+
 type API struct {
-	Log           *slog.Logger
-	Cfg           *config.Config
-	UserService   UserService
-	AuthService   AuthService
-	PcTypeService PcTypeService
-	PcRoomService PcRoomService
+	Log            *slog.Logger
+	Cfg            *config.Config
+	UserService    UserService
+	AuthService    AuthService
+	PcTypeService  PcTypeService
+	PcRoomService  PcRoomService
+	PcOrderService PcOrderService
 }
 
 func New(
@@ -108,13 +118,15 @@ func New(
 	authService AuthService,
 	pcTypeService PcTypeService,
 	pcRoomService PcRoomService,
+	pcOrderService PcOrderService,
 ) *API {
 	return &API{
-		Log:           log,
-		Cfg:           cfg,
-		UserService:   userService,
-		AuthService:   authService,
-		PcTypeService: pcTypeService,
-		PcRoomService: pcRoomService,
+		Log:            log,
+		Cfg:            cfg,
+		UserService:    userService,
+		AuthService:    authService,
+		PcTypeService:  pcTypeService,
+		PcRoomService:  pcRoomService,
+		PcOrderService: pcOrderService,
 	}
 }

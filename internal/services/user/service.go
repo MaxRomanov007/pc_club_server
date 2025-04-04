@@ -43,7 +43,7 @@ const (
 	AdminRoleName = "admin"
 )
 
-func New(
+func NewService(
 	userProvider provider,
 	userOwner owner,
 ) *Service {

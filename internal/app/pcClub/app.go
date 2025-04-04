@@ -56,6 +56,7 @@ func New(cfg *config.HTTPSServerConfig, api *pcCLub.API) *App {
 		r.Use(authorization.Authorize(api.Log, api.AuthService))
 
 		r.Post("/user", api.User())
+		r.Post("/order-pc", api.OrderPc())
 	})
 
 	//admin routes
