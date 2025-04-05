@@ -101,6 +101,14 @@ type PcOrderService interface {
 	) (code string, err error)
 }
 
+type DishService interface {
+	Dishes(
+		ctx context.Context,
+		limit int,
+		offset int,
+	) (dishes []models.Dish, err error)
+}
+
 type API struct {
 	Log            *slog.Logger
 	Cfg            *config.Config
@@ -109,6 +117,7 @@ type API struct {
 	PcTypeService  PcTypeService
 	PcRoomService  PcRoomService
 	PcOrderService PcOrderService
+	DishService    DishService
 }
 
 func New(
@@ -119,6 +128,7 @@ func New(
 	pcTypeService PcTypeService,
 	pcRoomService PcRoomService,
 	pcOrderService PcOrderService,
+	dishService DishService,
 ) *API {
 	return &API{
 		Log:            log,
@@ -128,5 +138,6 @@ func New(
 		PcTypeService:  pcTypeService,
 		PcRoomService:  pcRoomService,
 		PcOrderService: pcOrderService,
+		DishService:    dishService,
 	}
 }

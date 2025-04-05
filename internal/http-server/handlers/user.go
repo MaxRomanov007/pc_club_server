@@ -14,16 +14,16 @@ import (
 )
 
 type RegisterRequest struct {
-	Email    string `json:"email" validate:"required,min=3,max=32,email"`
-	Password string `json:"password" validate:"required,min=8,max=32"`
+	Email    string `json:"email" validate:"required,min=3,max=100,email"`
+	Password string `json:"password" validate:"required,min=8,max=100"`
 }
 type RegisterResponse struct {
 	Access string `json:"access"`
 }
 
 type LoginRequest struct {
-	Email    string `json:"email" validate:"required,min=3,max=32,email"`
-	Password string `json:"password" validate:"required,min=8,max=32"`
+	Email    string `json:"email" validate:"required,min=3,max=100,email"`
+	Password string `json:"password" validate:"required,min=8,max=100"`
 }
 type LoginResponse struct {
 	Access string `json:"access_token"`

@@ -19,14 +19,15 @@ func (s *Service) OrderPc(
 	code := codes.Generate(s.cfg.CodeLength)
 
 	order := &models.PcOrder{
-		UserID:        uid,
-		PcID:          pcId,
-		Code:          code,
-		Cost:          s.pcProvider.PcHourCost(ctx, pcId),
-		StartTime:     time.Now(),
-		Duration:      HourCount,
-		ActualEndTime: time.Now().Add(time.Duration(HourCount) * time.Hour),
-		OrderDate:     time.Now(),
+		UserID:          uid,
+		PcID:            pcId,
+		PcOrderStatusID: 1,
+		Code:            code,
+		Cost:            s.pcProvider.PcHourCost(ctx, pcId),
+		StartTime:       time.Now(),
+		Duration:        HourCount,
+		ActualEndTime:   time.Now().Add(time.Duration(HourCount) * time.Hour),
+		OrderDate:       time.Now(),
 	}
 
 	if err := s.pcOwner.OrderPc(ctx, order); err != nil {

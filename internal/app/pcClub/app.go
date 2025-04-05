@@ -27,13 +27,13 @@ func New(cfg *config.HTTPSServerConfig, api *pcCLub.API) *App {
 
 	r.Use(cors.Handler(cors.Options{
 		// AllowedOrigins:   []string{"https://foo.com"}, // Use this to allow specific origin hosts
-		AllowedOrigins: []string{"https://*", "*"},
+		AllowedOrigins: []string{"http://localhost:5173"},
 		// AllowOriginFunc:  func(r *http.Request, origin string) bool { return true },
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"X-PINGOTHER", "Accept", "Authorization", "Content-Type", "X-CSRF-Token", "Depth", "UserService-Agent", "X-File-Size", "X-Requested-With", "If-Modified-Since", "X-File-Name", "Cache-Control", "Access-Control-Expose-Headers", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"},
-		ExposedHeaders:   []string{"Link"},
-		AllowCredentials: true,
+		ExposedHeaders:   []string{"Link", "Set-Cookie"},
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
+		AllowCredentials: true,
 	}))
 
 	r.Use(middleware.RequestID)
@@ -50,6 +50,8 @@ func New(cfg *config.HTTPSServerConfig, api *pcCLub.API) *App {
 	r.Get("/pc-types/{type-id}", api.PcType())
 
 	r.Get("/pc-rooms", api.PcRooms())
+
+	r.Get("/dishes", api.Dishes())
 
 	//routes to be authorized
 	r.Group(func(r chi.Router) {
