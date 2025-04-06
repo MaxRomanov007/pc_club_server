@@ -16,9 +16,10 @@ func (e *Error) Error() string {
 }
 
 const (
-	ErrNotFoundCode           = "NotFound"
-	ErrAlreadyExistsCode      = "AlreadyExists"
-	ErrReferenceNotExistsCode = "ReferenceNotExists"
+	ErrNotFoundCode                = "NotFound"
+	ErrAlreadyExistsCode           = "AlreadyExists"
+	ErrReferenceNotExistsCode      = "ReferenceNotExists"
+	ErrCheckConstraintViolatedCode = "CheckConstraintViolated"
 )
 
 var (
@@ -33,6 +34,10 @@ var (
 	ErrReferenceNotExists = &Error{
 		Code:    ErrReferenceNotExistsCode,
 		Message: "reference not exists",
+	}
+	ErrCheckConstraintViolated = &Error{
+		Code:    ErrCheckConstraintViolatedCode,
+		Message: "check constraint violated",
 	}
 )
 

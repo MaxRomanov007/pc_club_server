@@ -52,6 +52,7 @@ func New(cfg *config.HTTPSServerConfig, api *pcCLub.API) *App {
 	r.Get("/pc-rooms", api.PcRooms())
 
 	r.Get("/dishes", api.Dishes())
+	r.Get("/dishes/{id}", api.Dish())
 
 	//routes to be authorized
 	r.Group(func(r chi.Router) {
@@ -59,6 +60,7 @@ func New(cfg *config.HTTPSServerConfig, api *pcCLub.API) *App {
 
 		r.Post("/user", api.User())
 		r.Post("/order-pc", api.OrderPc())
+		r.Post("/order-dish", api.OrderDish())
 	})
 
 	//admin routes

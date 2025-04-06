@@ -107,17 +107,31 @@ type DishService interface {
 		limit int,
 		offset int,
 	) (dishes []models.Dish, err error)
+
+	Dish(
+		ctx context.Context,
+		id int64,
+	) (dish models.Dish, err error)
+}
+
+type DishOrderService interface {
+	OrderDish(
+		ctx context.Context,
+		uid int64,
+		dishId int64,
+	) (err error)
 }
 
 type API struct {
-	Log            *slog.Logger
-	Cfg            *config.Config
-	UserService    UserService
-	AuthService    AuthService
-	PcTypeService  PcTypeService
-	PcRoomService  PcRoomService
-	PcOrderService PcOrderService
-	DishService    DishService
+	Log              *slog.Logger
+	Cfg              *config.Config
+	UserService      UserService
+	AuthService      AuthService
+	PcTypeService    PcTypeService
+	PcRoomService    PcRoomService
+	PcOrderService   PcOrderService
+	DishService      DishService
+	DishOrderService DishOrderService
 }
 
 func New(
@@ -129,15 +143,17 @@ func New(
 	pcRoomService PcRoomService,
 	pcOrderService PcOrderService,
 	dishService DishService,
+	dishOrderService DishOrderService,
 ) *API {
 	return &API{
-		Log:            log,
-		Cfg:            cfg,
-		UserService:    userService,
-		AuthService:    authService,
-		PcTypeService:  pcTypeService,
-		PcRoomService:  pcRoomService,
-		PcOrderService: pcOrderService,
-		DishService:    dishService,
+		Log:              log,
+		Cfg:              cfg,
+		UserService:      userService,
+		AuthService:      authService,
+		PcTypeService:    pcTypeService,
+		PcRoomService:    pcRoomService,
+		PcOrderService:   pcOrderService,
+		DishService:      dishService,
+		DishOrderService: dishOrderService,
 	}
 }

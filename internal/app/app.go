@@ -50,7 +50,7 @@ func New(
 
 	authService := auth.NewService(cfg.Auth, redisStorage, redisStorage, mssqlStorage, mssqlStorage)
 	userService := user.NewService(mssqlStorage, mssqlStorage)
-	orderService := order.NewService(cfg.Orders, mssqlStorage, mssqlStorage)
+	orderService := order.NewService(cfg.Orders, mssqlStorage, mssqlStorage, mssqlStorage, mssqlStorage)
 
 	pcClubApi := pcClubServer.New(
 		log,
@@ -61,6 +61,7 @@ func New(
 		mssqlStorage,
 		orderService,
 		mssqlStorage,
+		orderService,
 	)
 
 	pcClubApplication := pcClub.New(cfg.HttpsServer, pcClubApi)

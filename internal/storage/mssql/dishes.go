@@ -34,3 +34,34 @@ func (s *Storage) Dishes(
 
 	return dishes, nil
 }
+
+func (s *Storage) Dish(
+	ctx context.Context,
+	id int64,
+) (models.Dish, error) {
+	const op = "storage.mssql.Dish"
+
+	var dish models.Dish
+	if res := s.db.WithContext(ctx).
+		Preload("DishImages").
+		First(&dish, id); gorm.IsFailResult(res) {
+
+		return models.Dish{}, fmt.Errorf("%s: %w", op, errorByResult(res))
+	}
+
+	return dish, nil
+}
+
+func (s *Storage) DishCost(
+	ctx context.Context,
+	id int64,
+) float32 {
+	var dish models.Dish
+	if res := s.db.WithContext(ctx).
+		First(&dish, id); gorm.IsFailResult(res) {
+
+		return 0
+	}
+
+	return dish.Cost
+}

@@ -20,20 +20,41 @@ type PcProvider interface {
 	) (cost float32)
 }
 
+type DishOwner interface {
+	OrderDish(
+		ctx context.Context,
+		order *models.DishOrder,
+
+	) (err error)
+}
+
+type DishProvider interface {
+	DishCost(
+		ctx context.Context,
+		id int64,
+	) (cost float32)
+}
+
 type Service struct {
-	cfg        *config.OrdersConfig
-	pcOwner    PcOwner
-	pcProvider PcProvider
+	cfg          *config.OrdersConfig
+	pcOwner      PcOwner
+	pcProvider   PcProvider
+	dishOwner    DishOwner
+	dishProvider DishProvider
 }
 
 func NewService(
 	cfg *config.OrdersConfig,
 	pcOwner PcOwner,
 	pcProvider PcProvider,
+	dishOwner DishOwner,
+	dishProvider DishProvider,
 ) *Service {
 	return &Service{
-		cfg:        cfg,
-		pcOwner:    pcOwner,
-		pcProvider: pcProvider,
+		cfg:          cfg,
+		pcOwner:      pcOwner,
+		pcProvider:   pcProvider,
+		dishOwner:    dishOwner,
+		dishProvider: dishProvider,
 	}
 }
