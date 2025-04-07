@@ -83,13 +83,6 @@ type UserService interface {
 	) (err error)
 }
 
-type PcRoomService interface {
-	PcRooms(
-		ctx context.Context,
-		pcTypeID int64,
-	) (rooms []models.PcRoom, err error)
-}
-
 type PcTypeService interface {
 	PcTypes(
 		ctx context.Context,
@@ -134,16 +127,23 @@ type DishOrderService interface {
 	) (err error)
 }
 
+type PcsService interface {
+	Pcs(
+		ctx context.Context,
+		typeId int64,
+	) (pcs []models.Pc, err error)
+}
+
 type API struct {
 	Log              *slog.Logger
 	Cfg              *config.Config
 	UserService      UserService
 	AuthService      AuthService
 	PcTypeService    PcTypeService
-	PcRoomService    PcRoomService
 	PcOrderService   PcOrderService
 	DishService      DishService
 	DishOrderService DishOrderService
+	PcsService       PcsService
 }
 
 func New(
@@ -152,10 +152,10 @@ func New(
 	userService UserService,
 	authService AuthService,
 	pcTypeService PcTypeService,
-	pcRoomService PcRoomService,
 	pcOrderService PcOrderService,
 	dishService DishService,
 	dishOrderService DishOrderService,
+	pcsService PcsService,
 ) *API {
 	return &API{
 		Log:              log,
@@ -163,9 +163,9 @@ func New(
 		UserService:      userService,
 		AuthService:      authService,
 		PcTypeService:    pcTypeService,
-		PcRoomService:    pcRoomService,
 		PcOrderService:   pcOrderService,
 		DishService:      dishService,
 		DishOrderService: dishOrderService,
+		PcsService:       pcsService,
 	}
 }

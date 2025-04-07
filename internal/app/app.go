@@ -58,10 +58,10 @@ func New(
 		userService,
 		authService,
 		mssqlStorage,
-		mssqlStorage,
 		orderService,
 		mssqlStorage,
 		orderService,
+		mssqlStorage,
 	)
 
 	pcClubApplication := pcClub.New(cfg.HttpsServer, pcClubApi)

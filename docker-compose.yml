@@ -1,0 +1,7 @@
+services:
+  server:
+    restart: on-failure
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"

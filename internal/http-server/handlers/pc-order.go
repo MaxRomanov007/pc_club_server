@@ -1,6 +1,7 @@
 package pcCLub
 
 import (
+	"errors"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/render"
 	"log/slog"
@@ -8,6 +9,7 @@ import (
 	"pc_club_server/internal/lib/api/logger/sl"
 	"pc_club_server/internal/lib/api/request"
 	"pc_club_server/internal/lib/api/response"
+	"pc_club_server/internal/services/order"
 )
 
 type OrderPcRequest struct {
@@ -33,6 +35,12 @@ func (a *API) OrderPc() http.HandlerFunc {
 
 		code, err := a.PcOrderService.OrderPc(r.Context(), uid, req.PcId, req.HourCount)
 		if err != nil {
+			if errors.Is(err, order.ErrNotEnoughMoney) {
+				http.Error(w, "not enough money", http.StatusPaymentRequired)
+				log.Warn("not enough money", sl.Err(err))
+				return
+			}
+
 			log.Warn("failed to create order", sl.Err(err))
 			response.Internal(w)
 			return

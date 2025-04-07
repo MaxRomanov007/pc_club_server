@@ -27,7 +27,7 @@ func (s *Storage) OrderDish(
 		}
 	}()
 
-	if res := tx.Debug().WithContext(ctx).
+	if res := tx.WithContext(ctx).
 		Exec(`
 			UPDATE dbo.users
 			SET balance = balance - ? 

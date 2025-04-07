@@ -49,7 +49,7 @@ func New(cfg *config.HTTPSServerConfig, api *pcCLub.API) *App {
 	r.Get("/pc-types", api.PcTypes())
 	r.Get("/pc-types/{type-id}", api.PcType())
 
-	r.Get("/pc-rooms", api.PcRooms())
+	r.Get("/pcs", api.Pcs())
 
 	r.Get("/dishes", api.Dishes())
 	r.Get("/dishes/{id}", api.Dish())
