@@ -39,6 +39,10 @@ type UserResponse struct {
 	Balance float32 `json:"balance"`
 }
 
+type AddMoneyRequest struct {
+	Count float32 `json:"count" validate:"required,number,min=0"`
+}
+
 type UserWithOrdersResponse struct {
 	Email      string             `json:"email"`
 	Balance    float32            `json:"balance"`
@@ -270,5 +274,29 @@ func (a *API) UserWithOrders() http.HandlerFunc {
 			PcOrders:   userData.PcOrders,
 			DishOrders: userData.DishOrders,
 		})
+	}
+}
+
+func (a *API) AddUserMoney() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		const op = "handlers.AddUserMoney"
+
+		log := a.Log.With(
+			slog.String("operation", op),
+			slog.String("request_id", middleware.GetReqID(r.Context())),
+		)
+
+		uid := request.MustUID(r)
+
+		req, ok := request.DecodeAndValidateRequest[AddMoneyRequest](w, r, log)
+		if !ok {
+			return
+		}
+
+		if err := a.UserService.AddMoney(r.Context(), uid, req.Count); err != nil {
+			log.Error("failed to add user money", sl.Err(err))
+			response.Internal(w)
+			return
+		}
 	}
 }

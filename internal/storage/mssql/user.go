@@ -3,6 +3,7 @@ package mssql
 import (
 	"context"
 	"fmt"
+	gorm2 "gorm.io/gorm"
 	"pc_club_server/internal/domain/models"
 	"pc_club_server/internal/lib/api/database/gorm"
 )
@@ -150,4 +151,20 @@ func (s *Storage) UserWithOrders(
 	}
 
 	return user, nil
+}
+
+func (s *Storage) AddUserMoney(
+	ctx context.Context,
+	uid int64,
+	count float32,
+) error {
+	const op = "storage.mssql.AddUserMoney"
+
+	if res := s.db.WithContext(ctx).First(&models.User{}, uid).
+		Update("balance", gorm2.Expr("balance + ?", count)); gorm.IsFailResult(res) {
+
+		return fmt.Errorf("%s: %w", op, errorByResult(res))
+	}
+
+	return nil
 }

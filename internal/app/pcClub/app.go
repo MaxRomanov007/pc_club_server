@@ -59,6 +59,7 @@ func New(cfg *config.HTTPSServerConfig, api *pcCLub.API) *App {
 		r.Use(authorization.Authorize(api.Log, api.AuthService))
 
 		r.Get("/user", api.User())
+		r.Post("/add-money", api.AddUserMoney())
 		r.Get("/user-with-orders", api.UserWithOrders())
 		r.Post("/order-pc", api.OrderPc())
 		r.Post("/order-dish", api.OrderDish())

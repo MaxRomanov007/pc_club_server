@@ -13,7 +13,7 @@ func (s *Service) User(
 	ctx context.Context,
 	uid int64,
 ) (models.User, error) {
-	const op = "services.pcClub.user.User"
+	const op = "services.user.User"
 
 	user, err := s.userProvider.User(ctx, uid)
 	if err != nil {
@@ -27,7 +27,7 @@ func (s *Service) UserByEmail(
 	ctx context.Context,
 	email string,
 ) (models.User, error) {
-	const op = "services.pcClub.user.UserByEmail"
+	const op = "services.user.UserByEmail"
 
 	user, err := s.userProvider.UserByEmail(ctx, email)
 	if err != nil {
@@ -42,7 +42,7 @@ func (s *Service) SaveUser(
 	email string,
 	password string,
 ) (int64, error) {
-	const op = "services.pcClub.user.SaveUser"
+	const op = "services.user.SaveUser"
 
 	passHash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
@@ -67,7 +67,7 @@ func (s *Service) Login(
 	email string,
 	password string,
 ) (int64, error) {
-	const op = "services.pcClub.user.Email"
+	const op = "services.user.Email"
 
 	user, err := s.userProvider.UserByEmail(ctx, email)
 	if errors.Is(err, mssql.ErrNotFound) {
@@ -89,7 +89,7 @@ func (s *Service) DeleteUser(
 	ctx context.Context,
 	uid int64,
 ) error {
-	const op = "services.pcClub.user.DeleteUser"
+	const op = "services.user.DeleteUser"
 
 	err := s.userOwner.DeleteUser(ctx, uid)
 	if err != nil {
@@ -103,7 +103,7 @@ func (s *Service) IsAdmin(
 	ctx context.Context,
 	uid int64,
 ) error {
-	const op = "services.pcClub.user.IsAdmin"
+	const op = "services.user.IsAdmin"
 
 	role, err := s.userProvider.UserRole(ctx, uid)
 	if err != nil {
@@ -121,7 +121,7 @@ func (s *Service) UserWithOrders(
 	ctx context.Context,
 	uid int64,
 ) (models.User, error) {
-	const op = "services.pcClub.user.User"
+	const op = "services.user.User"
 
 	user, err := s.userProvider.UserWithOrders(ctx, uid)
 	if err != nil {
@@ -129,4 +129,18 @@ func (s *Service) UserWithOrders(
 	}
 
 	return user, nil
+}
+
+func (s *Service) AddMoney(
+	ctx context.Context,
+	uid int64,
+	count float32,
+) error {
+	const op = "services.user.AddMoney"
+
+	if err := s.userOwner.AddUserMoney(ctx, uid, count); err != nil {
+		return fmt.Errorf("%s: %w", op, HandleStorageError(err))
+	}
+
+	return nil
 }

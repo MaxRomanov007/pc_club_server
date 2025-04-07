@@ -75,6 +75,12 @@ type UserService interface {
 		ctx context.Context,
 		uid int64,
 	) (user models.User, err error)
+
+	AddMoney(
+		ctx context.Context,
+		uid int64,
+		count float32,
+	) (err error)
 }
 
 type PcRoomService interface {

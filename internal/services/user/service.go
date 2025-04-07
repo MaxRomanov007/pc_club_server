@@ -37,6 +37,12 @@ type owner interface {
 		ctx context.Context,
 		uid int64,
 	) (err error)
+
+	AddUserMoney(
+		ctx context.Context,
+		uid int64,
+		count float32,
+	) (err error)
 }
 
 type Service struct {
