@@ -24,7 +24,7 @@ type DishOwner interface {
 	OrderDish(
 		ctx context.Context,
 		order *models.DishOrder,
-
+		orderList *models.DishOrderList,
 	) (err error)
 }
 

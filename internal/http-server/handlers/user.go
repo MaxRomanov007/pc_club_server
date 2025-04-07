@@ -6,6 +6,7 @@ import (
 	"github.com/go-chi/render"
 	"log/slog"
 	"net/http"
+	"pc_club_server/internal/domain/models"
 	"pc_club_server/internal/lib/api/logger/sl"
 	"pc_club_server/internal/lib/api/request"
 	"pc_club_server/internal/lib/api/response"
@@ -34,8 +35,15 @@ type RefreshResponse struct {
 }
 
 type UserResponse struct {
-	Email   string
-	Balance float32
+	Email   string  `json:"email"`
+	Balance float32 `json:"balance"`
+}
+
+type UserWithOrdersResponse struct {
+	Email      string             `json:"email"`
+	Balance    float32            `json:"balance"`
+	PcOrders   []models.PcOrder   `json:"pc_orders"`
+	DishOrders []models.DishOrder `json:"dish_orders"`
 }
 
 func (a *API) Register() http.HandlerFunc {
@@ -230,5 +238,37 @@ func (a *API) Logout() http.HandlerFunc {
 			response.Internal(w)
 			return
 		}
+	}
+}
+
+func (a *API) UserWithOrders() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		const op = "handlers.UserWithOrders"
+
+		log := a.Log.With(
+			slog.String("operation", op),
+			slog.String("request_id", middleware.GetReqID(r.Context())),
+		)
+
+		uid := request.MustUID(r)
+
+		userData, err := a.UserService.UserWithOrders(r.Context(), uid)
+		if err != nil {
+			if errors.Is(err, user.ErrNotFound) {
+				log.Warn("user not found", sl.Err(err))
+				response.NotFound(w)
+				return
+			}
+			log.Error("failed to get user", sl.Err(err))
+			response.Internal(w)
+			return
+		}
+
+		render.JSON(w, r, UserWithOrdersResponse{
+			Email:      userData.Email,
+			Balance:    userData.Balance,
+			PcOrders:   userData.PcOrders,
+			DishOrders: userData.DishOrders,
+		})
 	}
 }

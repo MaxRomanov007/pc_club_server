@@ -10,6 +10,7 @@ import (
 func (s *Storage) OrderDish(
 	ctx context.Context,
 	order *models.DishOrder,
+	orderList *models.DishOrderList,
 ) (err error) {
 	const op = "storage.mssql.OrderDish"
 
@@ -35,14 +36,20 @@ func (s *Storage) OrderDish(
 		); gorm2.IsFailResult(res) {
 
 		if res.RowsAffected == 0 {
-			return ErrCheckConstraintViolated
+			return fmt.Errorf("%s: %w", op, ErrCheckConstraintViolated)
 		}
 
-		return fmt.Errorf("%s: %w", op, errorByResult(res))
+		return fmt.Errorf("%s: failed to update balance: %w", op, errorByResult(res))
 	}
 
 	if res := tx.WithContext(ctx).Save(&order); gorm2.IsFailResult(res) {
-		return fmt.Errorf("%s: %w", op, errorByResult(res))
+		return fmt.Errorf("%s: failed to save order: %w", op, errorByResult(res))
+	}
+
+	orderList.DishOrderID = order.DishOrderID
+
+	if res := tx.WithContext(ctx).Save(&orderList); gorm2.IsFailResult(res) {
+		return fmt.Errorf("%s: failed to save order list: %w", op, errorByResult(res))
 	}
 
 	return nil

@@ -130,3 +130,24 @@ func (s *Storage) DeleteUser(
 
 	return nil
 }
+
+func (s *Storage) UserWithOrders(
+	ctx context.Context,
+	uid int64,
+) (models.User, error) {
+	const op = "storage.mssql.user.User"
+
+	var user models.User
+	if res := s.db.WithContext(ctx).
+		Preload("PcOrders").
+		Preload("PcOrders.Pc").
+		Preload("PcOrders.Pc.PcType").
+		Preload("DishOrders").
+		Preload("DishOrders.DishOrderList").
+		Preload("DishOrders.DishOrderList.Dish").
+		First(&user, uid); gorm.IsFailResult(res) {
+		return models.User{}, fmt.Errorf("%s: failed to get user: %w", op, errorByResult(res))
+	}
+
+	return user, nil
+}

@@ -13,6 +13,7 @@ func (s *Service) OrderDish(
 	ctx context.Context,
 	uid int64,
 	dishId int64,
+	count int16,
 ) error {
 	const op = "services.order.OrderDish"
 
@@ -23,7 +24,12 @@ func (s *Service) OrderDish(
 		OrderDate:         time.Now(),
 	}
 
-	if err := s.dishOwner.OrderDish(ctx, &order); err != nil {
+	orderList := models.DishOrderList{
+		DishID: dishId,
+		Count:  count,
+	}
+
+	if err := s.dishOwner.OrderDish(ctx, &order, &orderList); err != nil {
 		if errors.Is(err, mssql.ErrCheckConstraintViolated) {
 			return fmt.Errorf("%s: %w", op, ErrNotEnoughMoney)
 		}

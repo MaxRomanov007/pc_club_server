@@ -20,6 +20,11 @@ type provider interface {
 		ctx context.Context,
 		uid int64,
 	) (role string, err error)
+
+	UserWithOrders(
+		ctx context.Context,
+		uid int64,
+	) (user models.User, err error)
 }
 
 type owner interface {

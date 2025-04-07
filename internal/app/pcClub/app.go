@@ -58,7 +58,8 @@ func New(cfg *config.HTTPSServerConfig, api *pcCLub.API) *App {
 	r.Group(func(r chi.Router) {
 		r.Use(authorization.Authorize(api.Log, api.AuthService))
 
-		r.Post("/user", api.User())
+		r.Get("/user", api.User())
+		r.Get("/user-with-orders", api.UserWithOrders())
 		r.Post("/order-pc", api.OrderPc())
 		r.Post("/order-dish", api.OrderDish())
 	})

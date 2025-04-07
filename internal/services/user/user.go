@@ -116,3 +116,17 @@ func (s *Service) IsAdmin(
 
 	return nil
 }
+
+func (s *Service) UserWithOrders(
+	ctx context.Context,
+	uid int64,
+) (models.User, error) {
+	const op = "services.pcClub.user.User"
+
+	user, err := s.userProvider.UserWithOrders(ctx, uid)
+	if err != nil {
+		return models.User{}, fmt.Errorf("%s: failed to get user from mssql: %w", op, HandleStorageError(err))
+	}
+
+	return user, nil
+}

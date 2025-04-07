@@ -12,7 +12,8 @@ import (
 )
 
 type OrderDishRequest struct {
-	Id int64 `json:"dish_id" validate:"required,number,min=0"`
+	Id    int64 `json:"dish_id" validate:"required,number,min=0"`
+	Count int16 `json:"count" validate:"required,number,min=0"`
 }
 
 func (a *API) OrderDish() http.HandlerFunc {
@@ -31,7 +32,7 @@ func (a *API) OrderDish() http.HandlerFunc {
 			return
 		}
 
-		if err := a.DishOrderService.OrderDish(r.Context(), uid, req.Id); err != nil {
+		if err := a.DishOrderService.OrderDish(r.Context(), uid, req.Id, req.Count); err != nil {
 			if errors.Is(err, order.ErrNotEnoughMoney) {
 				http.Error(w, "not enough money", http.StatusPaymentRequired)
 				log.Warn("not enough money", sl.Err(err))

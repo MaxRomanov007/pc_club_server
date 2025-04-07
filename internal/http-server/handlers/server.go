@@ -70,6 +70,11 @@ type UserService interface {
 		ctx context.Context,
 		uid int64,
 	) (err error)
+
+	UserWithOrders(
+		ctx context.Context,
+		uid int64,
+	) (user models.User, err error)
 }
 
 type PcRoomService interface {
@@ -119,6 +124,7 @@ type DishOrderService interface {
 		ctx context.Context,
 		uid int64,
 		dishId int64,
+		count int16,
 	) (err error)
 }
 
