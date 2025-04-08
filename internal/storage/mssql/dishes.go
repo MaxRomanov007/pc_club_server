@@ -49,6 +49,10 @@ func (s *Storage) Dish(
 		return models.Dish{}, fmt.Errorf("%s: %w", op, errorByResult(res))
 	}
 
+	for i := 0; i < len(dish.DishImages); i++ {
+		dish.DishImages[i].Path = s.cfg.Images.Host + "/" + dish.DishImages[i].Path
+	}
+
 	return dish, nil
 }
 

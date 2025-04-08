@@ -80,7 +80,7 @@ func (s *Service) Access(
 	}
 
 	if bannedToken.ExpTime >= claims.ExpiresAt.Unix() {
-		return 0, fmt.Errorf("%s: token in black list", op)
+		return 0, fmt.Errorf("%s: token in black listб %w", op, ErrTokenInBlackList)
 	}
 
 	return claims.UID, nil

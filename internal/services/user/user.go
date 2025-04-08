@@ -67,7 +67,7 @@ func (s *Service) Login(
 	email string,
 	password string,
 ) (int64, error) {
-	const op = "services.user.Email"
+	const op = "services.user.Login"
 
 	user, err := s.userProvider.UserByEmail(ctx, email)
 	if errors.Is(err, mssql.ErrNotFound) {
