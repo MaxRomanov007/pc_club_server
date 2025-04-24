@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/sqlserver"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
@@ -10,7 +9,6 @@ import (
 	"os"
 	"pc_club_server/internal/config"
 	"pc_club_server/internal/lib/api/database/mssql"
-	"time"
 )
 
 func main() {
@@ -20,9 +18,6 @@ func main() {
 	if migPath == "" {
 		log.Fatal("migrations path not set")
 	}
-
-	fmt.Println(mssql.GenerateConnString(cfg.Database.SQLServer))
-	time.Sleep(10 * time.Second)
 
 	m, err := migrate.New(
 		"file://"+migPath,
@@ -39,4 +34,5 @@ func main() {
 		}
 		log.Fatal("failed to run migrations: " + err.Error())
 	}
+	log.Println("db successfully migrated")
 }

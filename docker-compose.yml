@@ -2,21 +2,59 @@ services:
   server:
     restart: on-failure
     build:
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: /deploy/server/Dockerfile
     ports:
       - "8080:8080"
     depends_on:
-      - redis
+      mssql:
+        condition: service_healthy
+        restart: true
+      redis:
+        condition: service_healthy
+      migrator:
+        condition: service_completed_successfully
+
+  migrator:
+    restart: no
+    build:
+      context: .
+      dockerfile: /deploy/migrator/Dockerfile
+    depends_on:
+      mssql:
+        condition: service_healthy
+        restart: true
+
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "${DB_PASSWORD}"
+      MSSQL_PID: "Express"
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+    healthcheck:
+      test: [ "CMD", "/opt/mssql-tools18/bin/sqlcmd", "-U", "sa", "-P", "${DB_PASSWORD}", "-C", "-Q", "SELECT 1" ]
+      interval: 10s
+      retries: 10
 
   redis:
     image: redis:latest
     container_name: redis_container
     environment:
-      - REDIS_PASSWORD=12345678
+      REDIS_PASSWORD: "${REDIS_PASSWORD}"
     ports:
       - "6380:6379"
     volumes:
-      - ./redisdata:/data
+      - ./redis_data:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+      interval: 10s
+      retries: 10
+
 
 volumes:
-  redisdata:
+  redis_data:
+  mssql_data:
